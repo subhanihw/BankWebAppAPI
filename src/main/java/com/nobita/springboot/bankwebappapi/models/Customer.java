@@ -22,4 +22,10 @@ public class Customer {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL)
     private List<Account> accounts;
+
+    public Customer(int customerId, String name, String panNum) {
+        this.customerId = customerId;
+        this.name = name;
+        this.panNum = panNum;
+    }
 }

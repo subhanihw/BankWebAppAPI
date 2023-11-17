@@ -36,6 +36,14 @@ public class Account {
     @OneToMany(cascade = CascadeType.ALL)
     private List<Transaction> transactions;
 
+    public Account(int accountId, String accountNumber, double balance, String accountType, @Nullable Double interestRate) {
+        this.accountId = accountId;
+        this.accountNumber = accountNumber;
+        this.balance = balance;
+        this.accountType = accountType;
+        this.interestRate = interestRate;
+    }
+
     public void withdraw(double amount) throws InsufficientBalanceException, MinBalanceException {
         if (balance - amount < 0) {
             throw new InsufficientBalanceException("Insufficient balance");
