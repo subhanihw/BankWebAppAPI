@@ -22,5 +22,4 @@ public class Customer {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL)
     private List<Account> accounts;
-
 }

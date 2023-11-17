@@ -70,7 +70,7 @@ public class AccountController {
     }
 
     @DeleteMapping("/accounts/deleteAccount/{accountNum}")
-    public void deleteAccount
+    public ResponseEntity<Account> deleteAccount
             (@PathVariable String accountNum) throws AccountNotFoundException
     {
         Optional<Account> account = accountService.getAccountByAccountNumber(accountNum);
@@ -80,6 +80,7 @@ public class AccountController {
         }
         else {
             accountService.deleteAccount(account.get());
+            return ResponseEntity.ok(account.get());
         }
     }
 }

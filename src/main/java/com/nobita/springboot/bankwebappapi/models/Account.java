@@ -53,6 +53,9 @@ public class Account {
         if (amount > 5000000 && (customer.getPanNum() == null || customer.getPanNum().isEmpty())) {
             throw new RequiresPanException("Requires Pan details to deposit more than 5000000");
         }
+        if (amount < 100) {
+            throw new MinBalanceException("Amount must be greater than 100 to deposit");
+        }
         balance += amount;
         applyTransactionCharge(TRANSACTION_CHARGE);
     }

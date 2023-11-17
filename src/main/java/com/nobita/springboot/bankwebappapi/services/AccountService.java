@@ -21,10 +21,6 @@ public class AccountService {
         return repository.findAll();
     }
 
-    public void saveAccount(Account account) {
-        repository.save(account);
-    }
-
     public Account addAccount(Account account) throws InvalidAccountTypeException {
 
         String accountType = account.getAccountType();

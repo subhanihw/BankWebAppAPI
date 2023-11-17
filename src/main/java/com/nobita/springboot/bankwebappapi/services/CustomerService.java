@@ -16,9 +16,11 @@ import java.util.Optional;
 @Service
 public class CustomerService {
     private CustomerRepository repository;
+    private final AccountService accountService;
 
-    public CustomerService(CustomerRepository repository) {
+    public CustomerService(CustomerRepository repository, AccountService service) {
         this.repository = repository;
+        this.accountService = service;
     }
 
     public List<Customer> getAllCustomers() {
@@ -29,15 +31,17 @@ public class CustomerService {
         return repository.findById(id);
     }
 
-    public List<Account> getAllAccountsById(int id) {
-        return repository.findAllAccountsByCustomerId(id);
-    }
 
     public Customer addCustomer(Customer customer) {
         return repository.save(customer);
     }
 
     public void deleteCustomer(int id) {
+        Customer customer = findByCustomerId(id).get();
+        List<Account> accountList = accountService.getAllAccountsByCustomerId(customer);
+        for (Account account:accountList) {
+            accountService.deleteAccount(account);
+        }
         repository.deleteById(id);
     }
 
