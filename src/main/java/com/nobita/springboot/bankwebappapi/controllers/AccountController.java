@@ -34,7 +34,8 @@ public class AccountController {
     }
 
     @PostMapping("/accounts/createAccount")
-    public ResponseEntity<Account> createAccount(@RequestBody CreateAccountDTO accountDTO) throws CustomerNotFoundException, InvalidAccountTypeException, AccountTypeAlreadyExistsException {
+    public ResponseEntity<Account> createAccount(@RequestBody CreateAccountDTO accountDTO) throws CustomerNotFoundException, InvalidAccountTypeException, AccountTypeAlreadyExistsException
+    {
         Optional<Customer> customer = customerService.findByCustomerId(accountDTO.getCustomerId());
 
         if (customer.isEmpty()) {

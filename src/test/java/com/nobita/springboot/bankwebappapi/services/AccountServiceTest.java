@@ -17,8 +17,7 @@ import java.util.Optional;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
@@ -48,7 +47,15 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void addAccountValidAccountTest() throws InvalidAccountTypeException {
+    public void testGetAllAccounts_NoMocking() {
+        List<Account> accounts = accountService.getAllAccounts();
+
+        assertNotNull(accounts);
+    }
+
+
+    @Test
+    public void addAccountValidAccountSavingsTest() throws InvalidAccountTypeException {
         Account account = new Account();
         account.setAccountType("Savings");
 
@@ -58,6 +65,34 @@ public class AccountServiceTest {
         Account result = accountService.addAccount(account);
 
         assertThat(result.getAccountNumber(), is("S3"));
+        verify(repository, times(1)).save(account);
+    }
+
+    @Test
+    public void addAccountValidAccountCurrentTest() throws InvalidAccountTypeException {
+        Account account = new Account();
+        account.setAccountType("Current");
+
+        when(repository.countByAccountType("Current")).thenReturn(1);
+        when(repository.save(account)).thenReturn(account);
+
+        Account result = accountService.addAccount(account);
+
+        assertThat(result.getAccountNumber(), is("C2"));
+        verify(repository, times(1)).save(account);
+    }
+
+    @Test
+    public void addAccountValidAccountFixedDepositTest() throws InvalidAccountTypeException {
+        Account account = new Account();
+        account.setAccountType("Fixed Deposit");
+
+        when(repository.countByAccountType("Fixed Deposit")).thenReturn(2);
+        when(repository.save(account)).thenReturn(account);
+
+        Account result = accountService.addAccount(account);
+
+        assertThat(result.getAccountNumber(), is("FD3"));
         verify(repository, times(1)).save(account);
     }
 

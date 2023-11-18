@@ -87,7 +87,7 @@ public class CustomerController {
     }
 
     @PatchMapping("/customers/{id}")
-    public ResponseEntity<Customer> editCustomer(@PathVariable int id, @RequestBody Map<String, Object> fields) throws CustomerNotFoundException, InvalidFieldException {
+    public ResponseEntity<Customer> editCustomerFields(@PathVariable int id, @RequestBody Map<String, Object> fields) throws CustomerNotFoundException, InvalidFieldException {
         try {
             return ResponseEntity.ok(service.updateCustomerByFields(id, fields));
         }catch (CustomerNotFoundException ex) {
