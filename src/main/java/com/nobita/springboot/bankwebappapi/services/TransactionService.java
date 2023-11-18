@@ -9,8 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static com.nobita.springboot.bankwebappapi.models.Constants.TRANSACTION_CHARGE;
 
@@ -25,7 +24,7 @@ public class TransactionService {
     }
 
     public List<Transaction> getAllTransactions() {
-        return repository.findAll();
+        return repository.findAllByOrderByTransactionTimeDesc();
     }
 
     public Transaction addTransaction(AddTransactionDTO transactionDTO) throws AccountNotFoundException, RequiresPanException, MinBalanceException, InsufficientBalanceException, InvalidTransactionType {
@@ -64,7 +63,8 @@ public class TransactionService {
         if (account.isEmpty()) {
             throw new AccountNotFoundException("Account Not found");
         }
-
-        return account.get().getTransactions();
+        List<Transaction> transactions = account.get().getTransactions();
+        transactions.sort(Comparator.comparing(Transaction::getTransactionTime).reversed());
+        return transactions;
     }
 }
