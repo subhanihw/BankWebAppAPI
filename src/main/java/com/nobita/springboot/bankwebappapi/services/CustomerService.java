@@ -62,7 +62,7 @@ public class CustomerService {
             }
             return repository.save(existingCustomer.get());
         }
-        throw new CustomerNotFoundException(String.format("Customer with id = %s is not found", id));
+        throw new CustomerNotFoundException();
     }
 
 }

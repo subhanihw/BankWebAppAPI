@@ -5,7 +5,6 @@ import com.nobita.springboot.bankwebappapi.Repositories.TransactionRepository;
 import com.nobita.springboot.bankwebappapi.models.Account;
 import com.nobita.springboot.bankwebappapi.models.Transaction;
 import com.nobita.springboot.bankwebappapi.models.dto.AddTransactionDTO;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -31,7 +30,7 @@ public class TransactionService {
         Optional<Account> account = accountService.getAccountByAccountNumber(transactionDTO.getAccountNum());
 
         if (account.isEmpty()) {
-            throw new AccountNotFoundException("Account Not found");
+            throw new AccountNotFoundException();
         }
 
         String transactionType = transactionDTO.getType();
@@ -49,7 +48,7 @@ public class TransactionService {
         }else if (transactionType.equalsIgnoreCase("Withdraw")) {
             account.get().withdraw(transaction.getAmount());
         }else
-            throw new InvalidTransactionType("Withdraw/Deposit please enter any one of these transaction type.");
+            throw new InvalidTransactionType("Invalid Transaction Type");
         transaction.setRemainingBalance(account.get().getBalance());
 
         account.get().getTransactions().add(transaction);
@@ -61,7 +60,7 @@ public class TransactionService {
         Optional<Account> account = accountService.getAccountByAccountNumber(accountNum);
 
         if (account.isEmpty()) {
-            throw new AccountNotFoundException("Account Not found");
+            throw new AccountNotFoundException();
         }
         List<Transaction> transactions = account.get().getTransactions();
         transactions.sort(Comparator.comparing(Transaction::getTransactionTime).reversed());

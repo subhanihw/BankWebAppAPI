@@ -39,7 +39,7 @@ public class AccountController {
         Optional<Customer> customer = customerService.findByCustomerId(accountDTO.getCustomerId());
 
         if (customer.isEmpty()) {
-            throw new CustomerNotFoundException(String.format("Customer with id = %d is not found", accountDTO.getCustomerId()));
+            throw new CustomerNotFoundException();
         }
 
         List<Account> accountList = accountService.getAllAccountsByCustomerId(customer.get());
@@ -61,7 +61,7 @@ public class AccountController {
         Optional<Account> account = accountService.getAccountByAccountNumber(accountNum);
 
         if (account.isEmpty()) {
-            throw new AccountNotFoundException(String.format("Account with Number = %s is not found", accountNum));
+            throw new AccountNotFoundException();
         }
         else {
             Account account1 = account.get();
@@ -77,7 +77,7 @@ public class AccountController {
         Optional<Account> account = accountService.getAccountByAccountNumber(accountNum);
 
         if (account.isEmpty()) {
-            throw new AccountNotFoundException(String.format("Account with Number = %s is not found", accountNum));
+            throw new AccountNotFoundException();
         }
         else {
             accountService.deleteAccount(account.get());

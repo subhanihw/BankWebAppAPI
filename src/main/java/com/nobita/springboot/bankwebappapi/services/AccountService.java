@@ -34,7 +34,7 @@ public class AccountService {
         }else  if (accountType.equalsIgnoreCase("Fixed Deposit")){
             prefix = "FD";
         }else {
-            throw new InvalidAccountTypeException("Invalid Account Type");
+            throw new InvalidAccountTypeException();
         }
 
 

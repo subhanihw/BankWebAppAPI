@@ -36,7 +36,7 @@ public class CustomerController {
     public ResponseEntity<Customer> getCustomerById(@PathVariable int id) throws CustomerNotFoundException {
         Optional<Customer> customer = service.findByCustomerId(id);
         if (customer.isEmpty()) {
-            throw new CustomerNotFoundException(String.format("Customer with id = %d is not found", id));
+            throw new CustomerNotFoundException();
         }
         else {
             return ResponseEntity.ok(customer.get());
@@ -61,7 +61,7 @@ public class CustomerController {
     {
         Optional<Customer> customer1 = service.findByCustomerId(id);
         if (customer1.isEmpty()) {
-            throw new CustomerNotFoundException(String.format("Customer with id = %d is not found", id));
+            throw new CustomerNotFoundException();
         }
         else {
             Customer existingCustomer = customer1.get();
@@ -79,7 +79,7 @@ public class CustomerController {
     {
         Optional<Customer> customer1 = service.findByCustomerId(id);
         if (customer1.isEmpty()) {
-            throw new CustomerNotFoundException(String.format("Customer with id = %d is not found", id));
+            throw new CustomerNotFoundException();
         }
         else {
             service.deleteCustomer(id);
@@ -91,7 +91,7 @@ public class CustomerController {
         try {
             return ResponseEntity.ok(service.updateCustomerByFields(id, fields));
         }catch (CustomerNotFoundException ex) {
-            throw new CustomerNotFoundException(ex.getMessage());
+            throw new CustomerNotFoundException();
         }catch (InvalidFieldException ex) {
             throw new InvalidFieldException(ex.getMessage());
         }

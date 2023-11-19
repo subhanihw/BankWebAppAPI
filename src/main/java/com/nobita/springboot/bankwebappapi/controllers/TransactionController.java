@@ -23,16 +23,31 @@ public class TransactionController {
     }
 
     @PostMapping("/transactions/makeTransaction")
-    public ResponseEntity<Transaction> makeTransaction(@RequestBody AddTransactionDTO transactionDTO){
+    public ResponseEntity<Transaction> makeTransaction(@RequestBody AddTransactionDTO transactionDTO)
+            throws AccountNotFoundException, InvalidTransactionType, RequiresPanException,
+            InsufficientBalanceException, MinBalanceException {
+
         Transaction transaction;
         try {
             transaction = transactionService.addTransaction(transactionDTO);
-        } catch (AccountNotFoundException | InvalidTransactionType | RequiresPanException |
-                 InsufficientBalanceException | MinBalanceException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            if (e instanceof AccountNotFoundException) {
+                throw (AccountNotFoundException) e;
+            } else if (e instanceof InvalidTransactionType) {
+                throw (InvalidTransactionType) e;
+            } else if (e instanceof RequiresPanException) {
+                throw (RequiresPanException) e;
+            } else if (e instanceof InsufficientBalanceException) {
+                throw (InsufficientBalanceException) e;
+            } else if (e instanceof MinBalanceException) {
+                throw (MinBalanceException) e;
+            } else {
+                throw new RuntimeException("Unexpected exception occurred: " + e.getMessage(), e);
+            }
         }
         return ResponseEntity.ok(transaction);
     }
+
 
     @GetMapping("GetTransactionByAccountNumber")
     public ResponseEntity<List<Transaction>> getTransactionByAccountNum(@RequestParam String accountNum) throws AccountNotFoundException {
