@@ -1,6 +1,5 @@
 package com.nobita.springboot.bankwebappapi.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nobita.springboot.bankwebappapi.models.Customer;
 import com.nobita.springboot.bankwebappapi.models.dto.AddCustomerDTO;
@@ -11,10 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,12 +39,11 @@ class CustomerControllerTest {
 
         AddCustomerDTO customerDTO = new AddCustomerDTO("Naruto", null);
 
-        MvcResult perform = mockMvc.perform(post("/customers")
+        mockMvc.perform(post("/customers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(customerDTO)))
-                .andReturn();
-//                .andExpect(status().isOk());
-        System.out.println(perform.getResponse().getStatus());
+                .andExpect(status().is2xxSuccessful());
+//        System.out.println(perform.getResponse().getStatus());
 
         verify(customerService, times(1)).addCustomer(any());
     }
