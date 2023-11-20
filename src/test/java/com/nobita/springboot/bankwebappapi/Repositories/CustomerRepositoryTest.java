@@ -8,8 +8,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @RunWith(SpringRunner.class)
@@ -22,7 +23,7 @@ public class CustomerRepositoryTest {
 
     @Test
     public void testSaveCustomer() {
-        Customer customer = new Customer(1, "Naurto", "JSKFK7663K");
+        Customer customer = new Customer(1, "Naruto", "JSKFK7663K");
 
         Customer savedCustomer = customerRepository.save(customer);
 
@@ -32,12 +33,38 @@ public class CustomerRepositoryTest {
 
     @Test
     public void testFindCustomerById() {
-        Customer customer = new Customer(1, "Naurto", "JSKFK7663K");
+        Customer customer = new Customer(1, "Naruto", "JSKFK7663K");
 
         customerRepository.save(customer);
 
         Customer exisitingCustomer = customerRepository.findById(customer.getCustomerId()).get();
 
         assertNotNull(exisitingCustomer);
+    }
+
+    @Test
+    public void testDeleteCustomer() {
+        Customer customer = new Customer(1, "Naruto", "JSKFK7663K");
+        Customer customer1 = customerRepository.save(customer);
+
+        customerRepository.deleteById(customer1.getCustomerId());
+
+        assertEquals(Optional.empty(), customerRepository.findById(customer1.getCustomerId()));
+    }
+
+    @Test
+    public void testUpdateCustomer() {
+        Customer customer = new Customer(1, "Naruto", "JSKFK7663K");
+        Customer customer1 = customerRepository.save(customer);
+
+        customer1.setName("Nobita");
+        customer1.setPanNum("HFKFK7668K");
+
+        Customer updatedCustomer = customerRepository.save(customer1);
+        Optional<Customer> existedCustomer = customerRepository.findById(updatedCustomer.getCustomerId());
+
+        assertNotNull(existedCustomer);
+        assertEquals("Nobita", updatedCustomer.getName());
+        assertEquals("HFKFK7668K", updatedCustomer.getPanNum());
     }
 }
