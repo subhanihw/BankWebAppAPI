@@ -45,24 +45,20 @@ public class CustomerService {
         repository.deleteById(id);
     }
 
-    public Customer updateCustomerByFields(int id, Map<String, Object> fields) throws CustomerNotFoundException, InvalidFieldException {
-        Optional<Customer> existingCustomer = repository.findById(id);
+    public Customer updateCustomerByFields(Customer customer, Map<String, Object> fields) throws  InvalidFieldException {
 
-        if (existingCustomer.isPresent())
+        for (Map.Entry<String, Object> entry : fields.entrySet())
         {
-            for (Map.Entry<String, Object> entry : fields.entrySet()) {
-                String key = entry.getKey();
-                Object value = entry.getValue();
-                Field field = ReflectionUtils.findField(Customer.class, key);
-                if (field == null) {
-                    throw new InvalidFieldException("Invalid Field Name");
-                }
-                field.setAccessible(true);
-                ReflectionUtils.setField(field, existingCustomer.get(), value);
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            Field field = ReflectionUtils.findField(Customer.class, key);
+            if (field == null) {
+                throw new InvalidFieldException("Invalid Field Name");
             }
-            return repository.save(existingCustomer.get());
+            field.setAccessible(true);
+            ReflectionUtils.setField(field, customer, value);
         }
-        throw new CustomerNotFoundException();
+        return repository.save(customer);
     }
 
 }

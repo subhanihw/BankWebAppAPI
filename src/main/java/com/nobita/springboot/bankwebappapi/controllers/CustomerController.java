@@ -74,7 +74,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/customers/{id}")
-    public void deleteCustomer
+    public ResponseEntity<Customer> deleteCustomer
             (@PathVariable int id) throws CustomerNotFoundException
     {
         Optional<Customer> customer1 = service.findByCustomerId(id);
@@ -83,17 +83,21 @@ public class CustomerController {
         }
         else {
             service.deleteCustomer(id);
+            return ResponseEntity.ok(customer1.get());
         }
     }
 
     @PatchMapping("/customers/{id}")
     public ResponseEntity<Customer> editCustomerFields(@PathVariable int id, @RequestBody Map<String, Object> fields) throws CustomerNotFoundException, InvalidFieldException {
-        try {
-            return ResponseEntity.ok(service.updateCustomerByFields(id, fields));
-        }catch (CustomerNotFoundException ex) {
+        Optional<Customer> customer1 = service.findByCustomerId(id);
+        if (customer1.isEmpty()) {
             throw new CustomerNotFoundException();
-        }catch (InvalidFieldException ex) {
-            throw new InvalidFieldException(ex.getMessage());
+        }else {
+            try {
+                return ResponseEntity.ok(service.updateCustomerByFields(customer1.get(), fields));
+            }catch (InvalidFieldException ex) {
+                throw new InvalidFieldException();
+            }
         }
     }
 }
