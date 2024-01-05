@@ -28,7 +28,7 @@ public class CustomerRepositoryTest {
         Customer savedCustomer = customerRepository.save(customer);
 
         assertNotNull(savedCustomer);
-        assertEquals("Naurto", savedCustomer.getName());
+        assertEquals("Naruto", savedCustomer.getName());
     }
 
     @Test
